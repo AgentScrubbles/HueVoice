@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="en-us" Name="HueLightsCommandSet_en-us">
+    <AppName> Hue Lights </AppName>
+    <Example> Turn on Kitchen lights </Example>
+
+    <Command Name="TestCommand">
+      <Example> Run my test command </Example>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase"> Run [my] test command </ListenFor>
+      <ListenFor RequireAppName="ExplicitlySpecified"> Run [my] {builtin:AppName} test command </ListenFor>
+      <ListenFor>Run [my] test command</ListenFor>
+      <Feedback> Running the test command </Feedback>
+      <Navigate />
+    </Command>
+
+    <!--<Command Name="whenIsTripToDestination">
+      <Example> When is my trip to Las Vegas?</Example>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase"> when is [my] trip to {destination}</ListenFor>
+      <ListenFor RequireAppName="ExplicitlySpecified"> when is [my] {builtin:AppName} trip to {destination} </ListenFor>
+      <Feedback> Looking for trip to {destination}</Feedback>
+      <VoiceCommandService Target="AdventureWorksVoiceCommandService"/>
+    </Command>
+
+    <Command Name="cancelTripToDestination">
+      <Example> Cancel my trip to Las Vegas </Example>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase"> cancel [my] trip to {destination}</ListenFor>
+      <ListenFor RequireAppName="ExplicitlySpecified"> cancel [my] {builtin:AppName} trip to {destination} </ListenFor>
+      <Feedback> Cancelling trip to {destination}</Feedback>
+      <VoiceCommandService Target="AdventureWorksVoiceCommandService"/>
+    </Command>
+
+    <PhraseList Label="destination">
+      <Item>London</Item>
+      <Item>Las Vegas</Item>
+      <Item>Melbourne</Item>
+      <Item>Yosemite National Park</Item>
+    </PhraseList>-->
+  </CommandSet>
+
+</VoiceCommands>

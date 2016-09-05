@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.SpeechRecognition;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using HueVoice.Infrastructure;
 
 namespace HueVoice
 {
@@ -22,14 +26,93 @@ namespace HueVoice
     /// </summary>
     sealed partial class App : Application
     {
+
+        private readonly VoiceCommandService _vcService;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
+            Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
+                Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
+                Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            _vcService = new VoiceCommandService(GetType().GetTypeInfo().Assembly.GetTypes());
+        }
+
+        [VoiceCommand("TestCommand")]
+        public void Test()
+        {
+            
+        }
+
+        //Cortana entry point
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+
+
+            // If the app was launched via a Voice Command, this corresponds to the "show trip to <location>" command. 
+            // Protocol activation occurs when a tile is clicked within Cortana (via the background task)
+            if (args.Kind == ActivationKind.VoiceCommand)
+            {
+                // The arguments can represent many different activation types. Cast it so we can get the
+                // parameters we care about out.
+                var commandArgs = args as VoiceCommandActivatedEventArgs;
+
+                Windows.Media.SpeechRecognition.SpeechRecognitionResult speechRecognitionResult = commandArgs.Result;
+
+                // Get the name of the voice command and the text spoken. See AdventureWorksCommands.xml for
+                // the <Command> tags this can be filled with.
+                string voiceCommandName = speechRecognitionResult.RulePath[0];
+                string textSpoken = speechRecognitionResult.Text;
+
+
+                _vcService.Call(voiceCommandName, speechRecognitionResult.SemanticInterpretation.Properties);
+
+
+
+                // The commandMode is either "voice" or "text", and it indictes how the voice command
+                // was entered by the user.
+                // Apps should respect "text" mode by providing feedback in silent form.
+                //string commandMode = this.SemanticInterpretation("commandMode", speechRecognitionResult);
+
+                //switch (voiceCommandName)
+                //{
+                //    case "showTripToDestination":
+                //        // Access the value of the {destination} phrase in the voice command
+                //        string destination = this.SemanticInterpretation("destination", speechRecognitionResult);
+
+                //        // Create a navigation command object to pass to the page. Any object can be passed in,
+                //        // here we're using a simple struct.
+                //        navigationCommand = new ViewModel.TripVoiceCommand(
+                //            voiceCommandName,
+                //            commandMode,
+                //            textSpoken,
+                //            destination);
+
+                //        // Set the page to navigate to for this voice command.
+                //        navigationToPageType = typeof(View.TripDetails);
+                //        break;
+                //    default:
+                //        // If we can't determine what page to launch, go to the default entry point.
+                //        navigationToPageType = typeof(View.TripListView);
+                //        break;
+                //}
+            }
+            
+            else
+            {
+                // If we were launched via any other mechanism, fall back to the main page view.
+                // Otherwise, we'll hang at a splash screen.
+                throw new Exception();
+            }
+            
+            // Ensure the current window is active
+            Window.Current.Activate();
         }
 
         /// <summary>
@@ -37,7 +120,7 @@ namespace HueVoice
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -77,6 +160,20 @@ namespace HueVoice
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            try
+            {
+                // Install the main VCD. Since there's no simple way to test that the VCD has been imported, or that it's your most recent
+                // version, it's not unreasonable to do this upon app load.
+                StorageFile vcdStorageFile = await Package.Current.InstalledLocation.GetFileAsync(@"HueLightsCommands.xml");
+
+                await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
+                
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Installing Voice Commands Failed: " + ex.ToString());
+            }
         }
 
         /// <summary>
@@ -101,6 +198,11 @@ namespace HueVoice
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private string SemanticInterpretation(string interpretationKey, SpeechRecognitionResult speechRecognitionResult)
+        {
+            return speechRecognitionResult.SemanticInterpretation.Properties[interpretationKey].FirstOrDefault();
         }
     }
 }
