@@ -89,9 +89,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="ApplicationInsights.config">
+    <!--     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Content> -->
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -111,9 +111,9 @@
     <None Include="HueVoice_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HueLightsCommands.xml">
+    <None Include="HueLightsCommands.vcd">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -134,13 +134,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HueVoice.HueInterface\HueVoice.HueInterface.csproj">
+    <ProjectReference Include="..\HueVoice.HueInterface\Flipper.HueInterface.csproj">
       <Project>{B266E889-FCC4-48CF-9B85-9C9D2837A7FD}</Project>
-      <Name>HueVoice.HueInterface</Name>
+      <Name>Flipper.HueInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HueVoice.Infrastructure\HueVoice.Infrastructure.csproj">
+    <ProjectReference Include="..\HueVoice.Infrastructure\Flipper.Infrastructure.csproj">
       <Project>{C5EFC8F1-8846-44C8-90F3-DD469D733E41}</Project>
-      <Name>HueVoice.Infrastructure</Name>
+      <Name>Flipper.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

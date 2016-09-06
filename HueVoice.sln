@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HueVoice", "HueVoice\HueVoice.csproj", "{C81BA65A-DE68-4500-81A8-8F73FFD46871}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flipper", "HueVoice\Flipper.csproj", "{C81BA65A-DE68-4500-81A8-8F73FFD46871}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HueVoice.Infrastructure", "HueVoice.Infrastructure\HueVoice.Infrastructure.csproj", "{C5EFC8F1-8846-44C8-90F3-DD469D733E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flipper.Infrastructure", "HueVoice.Infrastructure\Flipper.Infrastructure.csproj", "{C5EFC8F1-8846-44C8-90F3-DD469D733E41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HueVoice.HueInterface", "HueVoice.HueInterface\HueVoice.HueInterface.csproj", "{B266E889-FCC4-48CF-9B85-9C9D2837A7FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flipper.HueInterface", "HueVoice.HueInterface\Flipper.HueInterface.csproj", "{B266E889-FCC4-48CF-9B85-9C9D2837A7FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
